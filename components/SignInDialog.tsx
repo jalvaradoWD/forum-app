@@ -4,7 +4,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { auth } from '../lib/auth';
+import { auth } from '../lib/firebase';
 import { FormLabel, Input } from '@mui/material';
 import { ButtonUnstyled } from '@mui/base';
 import { useDispatch } from 'react-redux';
