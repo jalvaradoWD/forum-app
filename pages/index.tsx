@@ -1,9 +1,13 @@
 import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 
 const Home: NextPage = () => {
-  useEffect(() => {});
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    console.log(session, status);
+  });
   return (
     <>
       <Head>

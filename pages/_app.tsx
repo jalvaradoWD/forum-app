@@ -1,10 +1,8 @@
 import { Dialog } from '@mui/material';
 import type { AppProps } from 'next/app';
 import { FC } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import SignInDialog from '../components/SignInDialog';
-import { auth } from '../lib/firebase';
 import { RootState, store } from '../redux/app/store';
 import {
   close as closeModal,
