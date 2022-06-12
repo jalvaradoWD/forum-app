@@ -9,6 +9,7 @@ import { FormLabel, Input } from '@mui/material';
 import { ButtonUnstyled } from '@mui/base';
 import { useDispatch } from 'react-redux';
 import { close as closeModal } from '../redux/features/signInModal/signInModal';
+import { signIn } from 'next-auth/react';
 
 const SignInDialog: FC = () => {
   const dispatch = useDispatch();
@@ -76,10 +77,11 @@ const SignInDialog: FC = () => {
         className="bg-blue-500 text-white rounded p-3"
         variant="contained"
         onClick={async () => {
-          const res = await signInWithPopup(auth, new GoogleAuthProvider());
-          if (res.user) {
-            dispatch(closeModal());
-          }
+          // const res = await signInWithPopup(auth, new GoogleAuthProvider());
+          // if (res.user) {
+          //   dispatch(closeModal());
+          // }
+          return signIn();
         }}
       >
         Sign in with Google

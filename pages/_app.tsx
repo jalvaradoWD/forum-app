@@ -1,5 +1,4 @@
 import { Dialog } from '@mui/material';
-import { signOut } from 'firebase/auth';
 import type { AppProps } from 'next/app';
 import { FC } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,6 +11,7 @@ import {
   open as openModal,
 } from '../redux/features/signInModal/signInModal';
 import '../styles/globals.css';
+import { SessionProvider, signOut, useSession } from 'next-auth/react';
 
 const SignInModal: FC = () => {
   const isOpen = useSelector((state: RootState) => state.SignInModal.isOpen);
@@ -29,13 +29,13 @@ const SignInModal: FC = () => {
 };
 
 const NavBar: FC = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const { data: session } = useSession();
   const dispatch = useDispatch();
   return (
     <nav className="bg-gray-800">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-end h-16 ">
-          {!user ? (
+          {!session?.user ? (
             <button
               onClick={() => dispatch(openModal())}
               className="text-white"
@@ -43,7 +43,7 @@ const NavBar: FC = () => {
               Log In
             </button>
           ) : (
-            <button className="text-white" onClick={() => signOut(auth)}>
+            <button className="text-white" onClick={() => signOut()}>
               Log Out
             </button>
           )}
@@ -53,12 +53,14 @@ const NavBar: FC = () => {
   );
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <Provider store={store}>
-      <NavBar />
-      <SignInModal />
-      <Component {...pageProps} />
+      <SessionProvider session={session}>
+        <NavBar />
+        <SignInModal />
+        <Component {...pageProps} />
+      </SessionProvider>
     </Provider>
   );
 }
