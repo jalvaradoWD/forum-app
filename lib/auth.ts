@@ -15,6 +15,8 @@ export const handler = nc<NextApiRequest, NextApiResponse>().use(
       req.session = session;
     }
 
+    if (!req.session)
+
     next();
   }
 );
