@@ -1,26 +1,24 @@
 import axios from 'axios';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
+import { AppContext } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 
-const Home: NextPage = () => {
+interface ICategory {
+  name: string;
+  id: string;
+  description: string;
+}
+
+const Home: NextPage<{
+  categories: ICategory[] | undefined;
+}> = ({ categories }) => {
   const { data: session, status } = useSession();
-  const [categories, setCategories] = useState<
-    {
-      name: string;
-      description: string;
-      id: string;
-    }[]
-  >([]);
+
   useEffect(() => {
     console.log(session, status);
   });
-
-  const loadCategories = async () => {
-    const res = await axios.get('/api/category');
-    setCategories(res.data);
-  };
 
   return (
     <>
@@ -33,12 +31,7 @@ const Home: NextPage = () => {
       ) : null}
 
       <p>{session?.user?.email}</p>
-      <button
-        className="bg-black text-white p-3 rounded-xl mx-4"
-        onClick={loadCategories}
-      >
-        Load Categories
-      </button>
+
       <ul>
         {categories
           ? categories.map((item, index) => (
@@ -55,5 +48,14 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context: AppContext) {
+  const res = await fetch('http://localhost:3000/api/category');
+  const categories: ICategory[] = await res.json();
+
+  return {
+    props: { categories },
+  };
+}
 
 export default Home;
