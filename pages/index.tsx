@@ -1,33 +1,61 @@
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import axios from 'axios';
 import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import { AppContext } from 'next/app';
 import Head from 'next/head';
-import { db } from '../lib/firebase';
+import { useEffect, useState } from 'react';
 
-const Home: NextPage = () => {
+interface ICategory {
+  name: string;
+  id: string;
+  description: string;
+}
+
+const Home: NextPage<{
+  categories: ICategory[] | undefined;
+}> = ({ categories }) => {
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    console.log(session, status);
+  });
+
   return (
     <>
       <Head>
         <title>Home Page</title>
       </Head>
       <h1 className="text-center text-5xl underline my-5">Forum App</h1>
+      {session?.user?.image ? (
+        <img src={session?.user?.image} alt="Profile" />
+      ) : null}
 
-      <button
-        onClick={async () => {
-          const col = collection(db, 'testingCollection');
-          const docRef = await addDoc(col, {
-            firstName: 'Joanna',
-            lastName: 'Alvarado',
-            age: 17,
-          });
+      <p>{session?.user?.email}</p>
 
-          console.log(docRef);
-        }}
-        className="bg-blue-800 text-white p-5 rounded w-full"
-      >
-        Hello
-      </button>
+      <ul>
+        {categories
+          ? categories.map((item, index) => (
+              <li
+                key={item.id}
+                className="border-2 border-red-500 mx-4 my-2 p-4"
+              >
+                <p className="text-center text-5xl font-bold">{item.name}</p>
+                <p className="text-xl">{item.description}</p>
+              </li>
+            ))
+          : null}
+      </ul>
     </>
   );
 };
+
+export async function getServerSideProps(context: AppContext) {
+  const res = await fetch('http://localhost:3000/api/category');
+  const categories: ICategory[] = await res.json();
+
+  return {
+    props: { categories },
+  };
+}
 
 export default Home;
