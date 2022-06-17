@@ -5,8 +5,15 @@ import { prisma } from '../../../lib/db';
 const handler = nc<NextApiRequest, NextApiResponse>();
 
 handler.get(async (req, res) => {
-  const foundCategories = await prisma?.category.findMany({});
-  res.json(foundCategories);
+  const { id } = req.query;
+  const foundCategory = await prisma.category.findFirst({
+    where: {
+      id: <string>id,
+    },
+    include: { Topic: true },
+  });
+
+  res.json(foundCategory);
 });
 
 export default handler;

@@ -7,7 +7,6 @@ import { prisma } from '../../lib/db';
 
 handler.get<TestInterface>(authenticateUserMiddleware, async (req, res) => {
   const userEmail = req.session?.user?.email;
-  console.log(userEmail);
   const foundUser = await prisma.user.findFirst({
     where: { email: userEmail },
   });

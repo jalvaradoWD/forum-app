@@ -12,7 +12,6 @@ export const authenticateUserMiddleware = (
   res: NextApiResponse,
   next: Function
 ) => {
-  console.log(process.env.NODE_ENV);
   if (!req.session?.user && process.env.NODE_ENV === 'production') {
     return res.status(401).json({ message: 'Not Authenticated' });
   }
