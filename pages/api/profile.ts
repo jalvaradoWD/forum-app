@@ -1,11 +1,11 @@
 import {
   handler,
-  TestInterface,
+  AuthUserSession,
   authenticateUserMiddleware,
 } from '../../lib/auth';
 import { prisma } from '../../lib/db';
 
-handler.get<TestInterface>(authenticateUserMiddleware, async (req, res) => {
+handler.get<AuthUserSession>(authenticateUserMiddleware, async (req, res) => {
   const userEmail = req.session?.user?.email;
   const foundUser = await prisma.user.findFirst({
     where: { email: userEmail },
