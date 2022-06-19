@@ -1,3 +1,4 @@
+import { Forum } from '@prisma/client';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
@@ -22,7 +23,7 @@ const Home: NextPage<{
 
       <p>{session?.user?.email}</p>
 
-      <button>Generate Posts</button>
+      <button type="button">Generate Posts</button>
 
       <ul>
         {forums
@@ -51,7 +52,7 @@ const Home: NextPage<{
 
 export async function getServerSideProps(context: any) {
   const res = await fetch('http://localhost:3000/api/forum');
-  const forums: IForum[] = await res.json();
+  const forums: Forum[] = await res.json();
 
   return {
     props: { forums },

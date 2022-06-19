@@ -4,7 +4,7 @@ import { generateFakeUser, updateUsersTopics } from '../lib/seedFunctions';
 const prismaClient = new PrismaClient();
 
 async function main() {
-  const generatedUsers = await generateFakeUser(20);
+  const generatedUsers = await generateFakeUser(50);
 
   await prismaClient.user.createMany({
     data: generatedUsers,
@@ -30,10 +30,8 @@ async function main() {
   });
 
   const forums = await prismaClient.forum.findMany({});
-  const topics = await prismaClient.topic.findMany({});
-  const category = await prismaClient.category.findMany({});
-  const users = await prisma?.user.findMany({});
 
+  // Creates all the categories for each Forum
   forums.forEach(async (forum) => {
     await prismaClient?.category.createMany({
       data: [
