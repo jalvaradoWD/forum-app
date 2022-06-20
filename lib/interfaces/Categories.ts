@@ -1,3 +1,5 @@
+import { Topic } from '@prisma/client';
+
 export interface IForum {
   id: string;
   name: string;
@@ -18,5 +20,5 @@ export interface ICategory {
   id: string;
   name: string;
   forum: string;
-  Topic: ITopic[];
+  Topic: Topic[];
 }

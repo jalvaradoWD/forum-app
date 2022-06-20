@@ -16,14 +16,6 @@ const Home: NextPage<{
         <title>Home Page</title>
       </Head>
       <h1 className="text-center text-5xl underline my-5">Forum App</h1>
-      {session?.user?.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={session?.user?.image} alt="Profile" />
-      ) : null}
-
-      <p>{session?.user?.email}</p>
-
-      <button type="button">Generate Posts</button>
 
       <ul>
         {forums

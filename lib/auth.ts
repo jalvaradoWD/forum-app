@@ -23,14 +23,14 @@ export const authenticateUserMiddleware = (
   next();
 };
 
-export const handler = nc<NextApiRequest, NextApiResponse>().use(
-  async (req: AuthUserSession, res: NextApiResponse, next: Function) => {
-    const session = await getSession({ req });
-
-    if (session) {
-      req.session = session;
-    }
-
-    next();
+export const setUserSession = async (
+  req: AuthUserSession,
+  res: NextApiResponse,
+  next: Function
+) => {
+  const session = await getSession({ req });
+  if (session) {
+    req.session = session;
   }
-);
+  next();
+};
