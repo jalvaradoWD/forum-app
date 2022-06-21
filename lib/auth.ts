@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DefaultSession } from 'next-auth';
 import { getSession } from 'next-auth/react';
-import nc from 'next-connect';
 
 export interface AuthUserSession extends NextApiRequest {
   session: DefaultSession | null;
