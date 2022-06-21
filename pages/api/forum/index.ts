@@ -5,7 +5,10 @@ import { prisma } from '../../../lib/db';
 const handler = nc<NextApiRequest, NextApiResponse>();
 
 handler.get(async (req, res) => {
-  const foundCategories = await prisma?.category.findMany({});
+  const foundCategories = await prisma?.forum.findMany({
+    include: { Category: true },
+  });
+
   res.json(foundCategories);
 });
 

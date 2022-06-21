@@ -1,24 +1,14 @@
-import axios from 'axios';
+import { Forum } from '@prisma/client';
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
-import { AppContext } from 'next/app';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-
-interface ICategory {
-  name: string;
-  id: string;
-  description: string;
-}
+import Link from 'next/link';
+import { IForum } from '../lib/interfaces/DatabaseInterfaces';
 
 const Home: NextPage<{
-  categories: ICategory[] | undefined;
-}> = ({ categories }) => {
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    console.log(session, status);
-  });
+  forums: IForum[] | undefined;
+}> = ({ forums }) => {
+  const { data: session } = useSession();
 
   return (
     <>
@@ -26,21 +16,26 @@ const Home: NextPage<{
         <title>Home Page</title>
       </Head>
       <h1 className="text-center text-5xl underline my-5">Forum App</h1>
-      {session?.user?.image ? (
-        <img src={session?.user?.image} alt="Profile" />
-      ) : null}
-
-      <p>{session?.user?.email}</p>
 
       <ul>
-        {categories
-          ? categories.map((item, index) => (
+        {forums
+          ? forums.map((item, index) => (
               <li
                 key={item.id}
                 className="border-2 border-red-500 mx-4 my-2 p-4"
               >
                 <p className="text-center text-5xl font-bold">{item.name}</p>
                 <p className="text-xl">{item.description}</p>
+
+                <ul>
+                  {item.Category.map((subCat) => (
+                    <li key={subCat.id}>
+                      <Link href={`/c/${subCat.id}`}>
+                        <p className="text-blue-700 font-bold">{subCat.name}</p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))
           : null}
@@ -49,12 +44,12 @@ const Home: NextPage<{
   );
 };
 
-export async function getServerSideProps(context: AppContext) {
-  const res = await fetch('http://localhost:3000/api/category');
-  const categories: ICategory[] = await res.json();
+export async function getServerSideProps(context: any) {
+  const res = await fetch('http://localhost:3000/api/forum');
+  const forums: Forum[] = await res.json();
 
   return {
-    props: { categories },
+    props: { forums },
   };
 }
 

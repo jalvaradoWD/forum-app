@@ -34,7 +34,8 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -43,10 +44,13 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Topic         Topic[]
-  Comment       Comment[]
+  password      String?
+
+
+  accounts Account[]
+  sessions Session[]
+  Topic    Topic[]
+  Comment  Comment[]
 }
 
 model VerificationToken {
@@ -57,15 +61,19 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Category {
-  id          String @id @default(uuid())
+model Forum {
+  id          String     @id @default(uuid())
   name        String
   description String
+  Category    Category[]
 }
 
-model SubCategory {
-  id   String @id @default(uuid())
-  name String
+model Category {
+  id      String  @id @default(uuid())
+  name    String
+  forum   String
+  forumId Forum   @relation(fields: [forum], references: [id])
+  Topic   Topic[]
 }
 
 model Topic {
@@ -75,16 +83,22 @@ model Topic {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   tags        String[]
+  userId      String
+  categoryId  String
 
-  author User   @relation(fields: [userId], references: [id])
-  userId String
+  author   User      @relation(fields: [userId], references: [id])
+  category Category  @relation(fields: [categoryId], references: [id])
+  Comment  Comment[]
 }
 
 model Comment {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  topicId   String
+  userId    String
+  body      String
 
-  author User   @relation(fields: [userId], references: [id])
-  userId String
+  author User  @relation(fields: [userId], references: [id])
+  topic  Topic @relation(fields: [topicId], references: [id])
 }
