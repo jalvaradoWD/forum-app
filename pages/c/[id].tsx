@@ -1,9 +1,9 @@
-import { Category } from '@prisma/client';
 import axios from 'axios';
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import CreateTopicDrawer from '../../components/CreateTopicDrawer';
-import { ICategory } from '../../lib/interfaces/Categories';
+import { ICategory } from '../../lib/interfaces/DatabaseInterfaces';
 
 const SubCategoryPage: NextPage<{ category: ICategory }> = ({ category }) => {
   const { data: session } = useSession();
@@ -36,7 +36,11 @@ const SubCategoryPage: NextPage<{ category: ICategory }> = ({ category }) => {
         {category.Topic.map((topic) => {
           return (
             <li key={topic.id} className="border-2 border-green-600 p-4">
-              <h2 className="text-2xl font-bold">{topic.title}</h2>
+              <Link href={`/t/${topic.id}`}>
+                <h2 className="text-2xl font-bold cursor-pointer text-blue-600">
+                  {topic.title}
+                </h2>
+              </Link>
               <p>{topic.description}</p>
               <p className="text-sm">
                 {new Date(topic.createdAt).toISOString()}
@@ -55,8 +59,10 @@ const SubCategoryPage: NextPage<{ category: ICategory }> = ({ category }) => {
 export const getServerSideProps = async (context: any) => {
   const { id } = context.query;
 
-  const res = await axios.get(`http://localhost:3000/api/category/${id}`);
-  const data: Category = await res.data;
+  const res = await axios.get<ICategory>(
+    `http://localhost:3000/api/category/${id}`
+  );
+  const data = res.data;
 
   return {
     props: {

@@ -3,7 +3,7 @@ import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { IForum } from '../lib/interfaces/Categories';
+import { IForum } from '../lib/interfaces/DatabaseInterfaces';
 
 const Home: NextPage<{
   forums: IForum[] | undefined;
@@ -30,7 +30,9 @@ const Home: NextPage<{
                 <ul>
                   {item.Category.map((subCat) => (
                     <li key={subCat.id}>
-                      <Link href={`/c/${subCat.id}`}>{subCat.name}</Link>
+                      <Link href={`/c/${subCat.id}`}>
+                        <p className="text-blue-700 font-bold">{subCat.name}</p>
+                      </Link>
                     </li>
                   ))}
                 </ul>

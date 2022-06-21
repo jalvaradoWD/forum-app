@@ -6,7 +6,6 @@ import {
   AuthUserSession,
   setUserSession,
 } from '../../../lib/auth';
-import { getSession } from 'next-auth/react';
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 

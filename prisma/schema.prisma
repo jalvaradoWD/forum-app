@@ -97,6 +97,7 @@ model Comment {
   updatedAt DateTime @default(now())
   topicId   String
   userId    String
+  body      String
 
   author User  @relation(fields: [userId], references: [id])
   topic  Topic @relation(fields: [topicId], references: [id])

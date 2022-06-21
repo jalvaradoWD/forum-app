@@ -10,7 +10,13 @@ handler.get(async (req, res) => {
     where: {
       id: <string>id,
     },
-    include: { Topic: true },
+    include: {
+      Topic: {
+        include: {
+          author: true,
+        },
+      },
+    },
   });
 
   res.json(foundCategory);
