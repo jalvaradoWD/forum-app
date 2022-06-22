@@ -3,13 +3,18 @@ import { Category } from '@prisma/client';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { ChangeEvent, FC, useState } from 'react';
+import { ICategory } from '../lib/interfaces/DatabaseInterfaces';
 
 interface ITopicFormData {
   title: string | undefined;
   description: string | undefined;
 }
 
-const CreateTopicDrawer: FC<{ category: Category }> = ({ category }) => {
+const CreateTopicDrawer: FC<{
+  category: Category;
+  categoryState: ICategory;
+  setCategoryState: Function;
+}> = ({ category, categoryState, setCategoryState }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { data: session } = useSession();
   const [topicFormData, setTopicFormData] = useState<ITopicFormData>({
@@ -32,8 +37,11 @@ const CreateTopicDrawer: FC<{ category: Category }> = ({ category }) => {
     if (res.status !== 200) throw new Error("Topic couldn't be created");
 
     setTopicFormData({ title: '', description: '' });
-
     setDrawerOpen(false);
+    setCategoryState({
+      ...categoryState,
+      Topic: [res.data.topic, ...categoryState.Topic],
+    });
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

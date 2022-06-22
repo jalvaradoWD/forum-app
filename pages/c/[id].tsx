@@ -1,58 +1,69 @@
 import axios from 'axios';
+import moment from 'moment';
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useState } from 'react';
 import CreateTopicDrawer from '../../components/CreateTopicDrawer';
 import { ICategory } from '../../lib/interfaces/DatabaseInterfaces';
 
-const SubCategoryPage: NextPage<{ category: ICategory }> = ({ category }) => {
+const Category: NextPage<{ category: ICategory }> = ({ category }) => {
   const { data: session } = useSession();
+  const [categoryState, setCategoryState] = useState<ICategory>(category);
 
   return (
-    <div>
+    <>
       <h1 className="text-center text-5xl font-bold bg-purple-900 text-white py-2">
-        {category.name}
+        {categoryState.name}
       </h1>
-      <div className="flex flex-row justify-between m-4 bg-slate-800 text-white box-border rounded">
-        <div>
-          <button
-            className="p-3 bg-blue-300 text-black rounded-tl rounded-bl"
-            type="button"
-          >
-            Latest
-          </button>
-          <button className="p-3 bg-blue-300 text-black" type="button">
-            New
-          </button>
-          <button className="p-3 bg-blue-300 text-black" type="button">
-            Top
-          </button>
+
+      <div className="p-4 flex flex-col gap-12">
+        <div className="flex flex-row justify-between bg-slate-800 text-white box-border rounded">
+          <div>
+            <button
+              className="p-3 bg-blue-300 text-black rounded-tl rounded-bl"
+              type="button"
+            >
+              Latest
+            </button>
+            <button className="p-3 bg-blue-300 text-black" type="button">
+              New
+            </button>
+            <button className="p-3 bg-blue-300 text-black" type="button">
+              Top
+            </button>
+          </div>
+          {session?.user === null || session?.user === undefined || (
+            <CreateTopicDrawer
+              category={categoryState}
+              categoryState={categoryState}
+              setCategoryState={setCategoryState}
+            />
+          )}
         </div>
-        {session?.user === null || session?.user === undefined || (
-          <CreateTopicDrawer category={category} />
-        )}
+
+        <div className="flex flex-col w-full gap-2">
+          {category.Topic.map((topic) => {
+            return (
+              <div
+                key={topic.id}
+                className="border-b-2 border-gray-500 last:border-b-transparent flex flex-row first:rounded-tr first:rounded-tl last:rounded-bl last:rounded-br"
+              >
+                <div className="p-2  text-blue-800 font-bold w-full">
+                  <Link href={`/t/${topic.id}`}>{topic.title}</Link>
+                </div>
+                <div className="p-2  text-center w-36">
+                  {moment(topic.createdAt).format('MM Do YY')}
+                </div>
+                <div className="p-2  text-center w-36">
+                  {moment(topic.updatedAt).format('MM Do YY')}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <ul className="m-4 flex flex-col gap-2">
-        {category.Topic.map((topic) => {
-          return (
-            <li key={topic.id} className="border-2 border-green-600 p-4">
-              <Link href={`/t/${topic.id}`}>
-                <h2 className="text-2xl font-bold cursor-pointer text-blue-600">
-                  {topic.title}
-                </h2>
-              </Link>
-              <p>{topic.description}</p>
-              <p className="text-sm">
-                {new Date(topic.createdAt).toISOString()}
-              </p>
-              <p className="text-sm">
-                {new Date(topic.updatedAt).toISOString()}
-              </p>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    </>
   );
 };
 
@@ -71,4 +82,4 @@ export const getServerSideProps = async (context: any) => {
   };
 };
 
-export default SubCategoryPage;
+export default Category;

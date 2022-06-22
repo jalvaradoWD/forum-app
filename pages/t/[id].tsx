@@ -1,11 +1,13 @@
-import axios from 'axios';
-import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
-import { NextPage } from 'next';
-import { Comment, Topic as TopicPrismaInterface, User } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import { Drawer } from '@mui/material';
-import { useRouter } from 'next/router';
+import { Comment, Topic as TopicPrismaInterface, User } from '@prisma/client';
+import axios from 'axios';
+import { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
+
+import { generateAvatar } from '../../lib/avatars';
 
 interface IComment extends Comment {
   author: User;
@@ -134,7 +136,7 @@ const Topic: NextPage<{ topic: ITopic }> = ({ topic }) => {
             >
               <Image
                 className="rounded-full"
-                src={comment.author.image! || '/images/guy.jpg'}
+                src={generateAvatar(comment.author)}
                 width="50"
                 height="50"
                 alt="Testing"

@@ -15,6 +15,9 @@ handler.get(async (req, res) => {
         include: {
           author: true,
         },
+        orderBy: {
+          updatedAt: 'desc',
+        },
       },
     },
   });

@@ -27,11 +27,13 @@ handler.post<AuthUserSession>(authenticateUserMiddleware, async (req, res) => {
 
   if (!foundUser) return res.status(400).json({ message: 'User not found' });
 
-  await prisma.topic.create({
+  const createdTopic = await prisma.topic.create({
     data: { title, description, userId: foundUser?.id, categoryId },
   });
 
-  return res.status(200).json({ message: 'Topic Created' });
+  return res
+    .status(200)
+    .json({ message: 'Topic Created', topic: createdTopic });
 });
 
 export default handler;

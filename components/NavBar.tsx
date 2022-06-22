@@ -4,14 +4,15 @@ import { open as openModal } from '../redux/features/signInModal/signInModal';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { generateAvatar } from '../lib/avatars';
 
 const NavBar: FC = () => {
   const { data: session } = useSession();
 
   const dispatch = useDispatch();
   return (
-    <nav className="bg-gray-800">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <nav className="px-4 bg-gray-800">
+      <div>
         <div className="relative flex items-center justify-between h-16 ">
           <Link href="/">
             <p className="text-white cursor-pointer">Home</p>
@@ -29,7 +30,7 @@ const NavBar: FC = () => {
                 Log Out
               </button>
               <Image
-                src={session.user.image! || '/images/guy.jpg'}
+                src={generateAvatar(session.user)}
                 alt="User identity"
                 width="50"
                 height="50"

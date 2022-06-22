@@ -1,5 +1,6 @@
 import nc from 'next-connect';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { prisma } from '../../../lib/db';
 
 const handler = nc<NextApiRequest, NextApiResponse>();
 

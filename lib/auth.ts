@@ -33,3 +33,5 @@ export const setUserSession = async (
   }
   next();
 };
+
+console.log('Hello world');
